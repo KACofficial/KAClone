@@ -1,0 +1,43 @@
+# Ignore my backup folder
+/backup/
+# And ignore my test files
+*test*
+
+# Ignore build directory
+/build/
+# Ignore CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+# Ignore object files, static and dynamic libraries
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+# Ignore binary files
+*.exe
+*.out
+*.app
+# Ignore user-specific files
+*.user
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*.log
+# Ignore coverage reports
+*.gcno
+*.gcda
+# Ignore temporary files
+*~
+*.tmp
+# Ignore IDE specific files
+/.idea/
+/.vscode/
+*.code-workspace
+# Ignore test results
+*.test
+*.result
