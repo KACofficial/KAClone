@@ -1,3 +1,4 @@
+#include "utils.hpp"
 #include <argparse/argparse.hpp>
 #include <chrono>
 #include <filesystem>
@@ -7,7 +8,6 @@
 #include <openssl/evp.h>
 #include <regex>
 #include <sstream>
-#include "utils.hpp"
 
 namespace fs = std::filesystem;
 void backupFile(const fs::path &sourcePath, const fs::path &destinationPath,
@@ -60,7 +60,6 @@ void startBackupTool(argparse::ArgumentParser &parser) {
         fs::path destination = output / fs::relative(entry.path(), source);
         backupFile(entry.path(), destination, parser["-V"]);
       } else {
-        // Optionally log if the file is skipped due to the onlyPattern
         // if (parser["-V"] == true)
         //   VERBOSE_LOG("Skipping file (does not match -on/--only): " +
         //               entry.path().string());
@@ -71,7 +70,6 @@ void startBackupTool(argparse::ArgumentParser &parser) {
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> duration = end - start;
 
-  // Print the total time taken
   std::cout << "Total time taken: " << duration.count() << " seconds"
             << std::endl;
 }
@@ -81,26 +79,22 @@ bool checkValidity(const std::string &path, const std::string &exclude,
   std::regex excludeRegex(exclude);
   std::regex onlyRegex(only);
 
-  // Check if the path should be excluded
   if (std::regex_search(path, excludeRegex)) {
     return false; // Excluded
   }
 
-  // Check if the path matches the only pattern
   if (std::regex_search(path, onlyRegex)) {
     return true; // Included
   }
 
-  return false; // Not included
+  return false; // If neither excluded ofr included, default to excluded
 }
 
 void backupFile(const fs::path &sourcePath, const fs::path &destinationPath,
                 const argparse::Argument &verbose) {
   try {
-    // Ensure the destination directory exists
     fs::create_directories(destinationPath.parent_path());
 
-    // Check if the file already exists in the destination
     if (fs::exists(destinationPath)) {
       // Compare SHA-256 hashes
       std::string sourceHash = computeSHA256(sourcePath);
@@ -160,7 +154,7 @@ std::string computeSHA256(const fs::path &filePath) {
   }
 
   // Read the file in chunks and update the digest
-  char buffer[8192*2];
+  char buffer[8192 * 2];
   while (file.read(buffer, sizeof(buffer))) {
     EVP_DigestUpdate(mdctx, buffer, file.gcount());
   }
