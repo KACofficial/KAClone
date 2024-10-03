@@ -87,7 +87,7 @@ bool checkValidity(const std::string &path, const std::string &exclude,
     return true; // Included
   }
 
-  return false; // If neither excluded ofr included, default to excluded
+  return false; // If neither excluded or included, default to excluded
 }
 
 void backupFile(const fs::path &sourcePath, const fs::path &destinationPath,
